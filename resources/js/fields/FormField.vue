@@ -5,8 +5,10 @@
         :cover="cover"
     />
 
+    {{  }}
+
     <file-picker
-        v-if="(file || resourceId) && coverProps"
+        v-if="(file || resourceId) && coverProps && coverProps.field.displayCoverUploader"
         v-model="cover"
         v-bind="coverProps"
         :errors="errors"

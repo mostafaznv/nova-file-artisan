@@ -5,6 +5,7 @@ namespace Mostafaznv\NovaLarupload\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\SupportsDependentFields;
+use Mostafaznv\Larupload\Storage\Attachment;
 use Mostafaznv\NovaLarupload\Traits\HandlesValidation;
 
 
@@ -24,6 +25,8 @@ class NovaLarupload extends File
     public $laruploadRules         = [];
     public $laruploadCreationRules = [];
     public $laruploadUpdateRules   = [];
+
+    protected ?bool $displayCoverUploader = null;
 
 
     public function __construct(string $label, string $attachment)
@@ -106,5 +109,37 @@ class NovaLarupload extends File
         }
 
         return parent::fillAttribute($request, $requestAttribute, $model, $attribute);
+    }
+
+    private function attachment($resource, ?string $attribute = null): ?Attachment
+    {
+        $attachments = $resource->attachments();
+
+        foreach ($attachments as $attachment) {
+            if ($attachment->getName() == $attribute) {
+                return $attachment;
+            }
+        }
+
+        return null;
+    }
+
+    public function hideCoverUploader(): self
+    {
+        $this->displayCoverUploader = false;
+
+        return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        $attachment = $this->attachment($this->resource, $this->attribute);
+
+        return [
+            ...parent::jsonSerialize(),
+            'displayCoverUploader' => $this->displayCoverUploader !== null
+                ? $this->displayCoverUploader
+                : ($attachment?->getGenerateCoverStatus() ?? true)
+        ];
     }
 }
