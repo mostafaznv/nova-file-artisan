@@ -2,6 +2,7 @@
     <file-picker
         v-model="file"
         v-bind="$props"
+        :original-attribute-name="field.attribute"
         :cover="cover"
     />
 
@@ -11,6 +12,7 @@
         v-if="(file || resourceId) && coverProps && coverProps.field.displayCoverUploader"
         v-model="cover"
         v-bind="coverProps"
+        :original-attribute-name="field.attribute"
         :errors="errors"
         :is-cover="true"
     />

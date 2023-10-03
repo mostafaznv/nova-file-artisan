@@ -42,6 +42,14 @@
                     :dusk="`${field.attribute}-delete-link`"
                     :input-dusk="field.attribute"
                 />
+
+                <DeleteCoverButton
+                    v-if="isCover && hasValue"
+                    :resource-id="resourceId"
+                    :resource-name="resourceName"
+                    :field-name="originalAttributeName"
+                    :field="field"
+                />
             </div>
         </template>
     </DefaultField>
@@ -49,6 +57,7 @@
 
 <script>
 import {DependentFormField, HandlesValidationErrors, Errors} from 'laravel-nova'
+import DeleteCoverButton from "./DeleteCoverButton.vue";
 
 function createFile(file) {
     return {
@@ -63,6 +72,7 @@ function createFile(file) {
 
 export default {
     name: 'FilePicker',
+    components: {DeleteCoverButton},
     mixins: [
         HandlesValidationErrors, DependentFormField
     ],
@@ -70,8 +80,8 @@ export default {
         'update:modelValue'
     ],
     props: [
-        'resourceId', 'relatedResourceName', 'relatedResourceId', 'viaRelationship',
-        'field', 'cover', 'isCover', 'errors'
+        'originalAttributeName', 'resourceId', 'resourceName', 'relatedResourceName', 'relatedResourceId',
+        'viaRelationship', 'field', 'cover', 'isCover', 'errors'
     ],
     inject: [
         'removeFile'
