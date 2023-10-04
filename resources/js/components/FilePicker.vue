@@ -42,14 +42,6 @@
                     :dusk="`${field.attribute}-delete-link`"
                     :input-dusk="field.attribute"
                 />
-
-                <DeleteButton
-                    v-if="isCover && hasValue"
-                    :resource-id="resourceId"
-                    :resource-name="resourceName"
-                    :field-name="originalAttributeName"
-                    :field="field"
-                />
             </div>
         </template>
     </DefaultField>
@@ -57,7 +49,7 @@
 
 <script>
 import {DependentFormField, HandlesValidationErrors, Errors} from 'laravel-nova'
-import DeleteButton from './DeleteButton.vue'
+
 
 function createFile(file) {
     return {
@@ -72,9 +64,6 @@ function createFile(file) {
 
 export default {
     name: 'FilePicker',
-    components: {
-        DeleteButton
-    },
     mixins: [
         HandlesValidationErrors, DependentFormField
     ],
@@ -244,7 +233,7 @@ export default {
             this.uploadErrors = new Errors()
 
             const {resourceName, resourceId, relatedResourceName, relatedResourceId, viaRelationship} = this
-            const attribute = this.currentField.attribute
+            const attribute = this.originalAttributeName
 
             const uri = this.viaRelationship
                 ? `/nova-api/${resourceName}/${resourceId}/${relatedResourceName}/${relatedResourceId}/field/${attribute}?viaRelationship=${viaRelationship}`
