@@ -1,7 +1,17 @@
 <template>
-    <DangerButton @click="showModal = true" type="button" v-bind="$attrs">
-        {{ __('Delete Cover') }}
-    </DangerButton>
+    <div
+        @click="showModal = true" v-bind="$attrs"
+        class="cursor-pointer text-red-500 inline-flex items-center"
+    >
+        <Icon
+            class="mr-2"
+            type="trash"
+            view-box="0 0 24 24"
+            width="16"
+            height="16"
+        />
+        <span class="class mt-1">{{ __('Delete Cover') }}</span>
+    </div>
 
     <Modal
         data-testid="delete-resource-modal"
