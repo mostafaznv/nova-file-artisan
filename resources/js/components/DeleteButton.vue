@@ -10,7 +10,10 @@
             width="16"
             height="16"
         />
-        <span class="class mt-1">{{ __('Delete Cover') }}</span>
+
+        <span class="class mt-1">
+            {{ label }}
+        </span>
     </div>
 
     <Modal
@@ -20,15 +23,15 @@
         size="sm"
     >
         <form
-            @submit.prevent="deleteCover"
+            @submit.prevent="remove"
             class="mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
         >
             <slot>
-                <ModalHeader v-text="__(`Delete Cover`)"/>
+                <ModalHeader v-text="label"/>
 
                 <ModalContent>
                     <p class="leading-normal">
-                        {{ __('Are you sure you want to delete the selected cover?') }}
+                        {{ __(`Are you sure you want to delete the selected ${mode}?`) }}
                     </p>
                 </ModalContent>
             </slot>
@@ -62,11 +65,18 @@
 </template>
 
 <script setup>
-import {defineProps, ref} from 'vue'
+import {defineProps, ref, computed} from 'vue'
 import {useLocalization} from 'laravel-nova'
 
 
 const props = defineProps({
+    mode: {
+        type: String,
+        required: true,
+        validator(value) {
+            return ['file', 'cover'].includes(value)
+        }
+    },
     resourceName: {
         type: String,
         required: true
@@ -85,15 +95,30 @@ const props = defineProps({
     }
 })
 
+
+
+// composables
 const { __ } = useLocalization()
 
+
+// variables
 const showModal = ref(false)
 const deleting = ref(false)
 
 
-async function deleteCover() {
+// computed properties
+const label = computed(() => {
+    if (props.mode === 'file') {
+        return __('Delete File')
+    }
+
+    return __('Delete Cover')
+})
+
+
+async function remove() {
     const url = `/nova-api/${props.resourceName}/${props.resourceId}/field/${props.fieldName}`
-    const params = '?cover=true'
+    const params = props.mode === 'cover' ? '?cover=true' : ''
 
     deleting.value = true
 
@@ -101,7 +126,7 @@ async function deleteCover() {
         .delete(url + params)
         .then(() => {
             Nova.success(
-                __('The cover has been deleted!')
+                __(`The ${props.mode} has been deleted!`)
             )
 
             props.isDetailPage

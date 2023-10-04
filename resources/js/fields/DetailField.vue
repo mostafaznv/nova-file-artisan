@@ -52,12 +52,12 @@
 
 <script>
 import FilePreview from '../components/FilePreview.vue'
-import DeleteCoverButton from "../components/DeleteCoverButton.vue";
+import DeleteButton from '../components/DeleteButton.vue'
 
 
 export default {
     components: {
-        DeleteCoverButton,
+        DeleteButton,
         FilePreview
     },
     props: ['resource', 'resourceName', 'resourceId', 'field', 'index'],

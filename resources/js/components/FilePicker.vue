@@ -43,7 +43,7 @@
                     :input-dusk="field.attribute"
                 />
 
-                <DeleteCoverButton
+                <DeleteButton
                     v-if="isCover && hasValue"
                     :resource-id="resourceId"
                     :resource-name="resourceName"
@@ -57,7 +57,7 @@
 
 <script>
 import {DependentFormField, HandlesValidationErrors, Errors} from 'laravel-nova'
-import DeleteCoverButton from "./DeleteCoverButton.vue";
+import DeleteButton from './DeleteButton.vue'
 
 function createFile(file) {
     return {
@@ -72,7 +72,9 @@ function createFile(file) {
 
 export default {
     name: 'FilePicker',
-    components: {DeleteCoverButton},
+    components: {
+        DeleteButton
+    },
     mixins: [
         HandlesValidationErrors, DependentFormField
     ],
