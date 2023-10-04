@@ -10,18 +10,29 @@
 
             <span v-else>&mdash;</span>
 
-            <p v-if="shouldShowToolbar" class="flex items-center text-sm mt-3">
-                <LinkButton
-                    v-if="field.downloadable"
-                    @keydown.enter.prevent="download"
-                    @click.prevent="download"
-                    :dusk="field.attribute + '-download-link'"
-                    tabindex="0"
-                >
-                    <Icon class="mr-2" type="download" width="16" height="16" />
-                    <span class="class mt-1">{{ __('Download') }}</span>
-                </LinkButton>
-            </p>
+            <div class="flex items-center text-sm mt-3 gap-6">
+                <p v-if="shouldShowToolbar" class="flex items-center">
+                    <LinkButton
+                        v-if="field.downloadable"
+                        @keydown.enter.prevent="download"
+                        @click.prevent="download"
+                        :dusk="field.attribute + '-download-link'"
+                        tabindex="0"
+                    >
+                        <Icon class="mr-2" type="download" width="16" height="16" />
+                        <span class="class mt-1">{{ __('Download') }}</span>
+                    </LinkButton>
+                </p>
+
+                <DeleteButton
+                    v-if="shouldShowFile"
+                    mode="file"
+                    :resource-id="resourceId"
+                    :resource-name="resourceName"
+                    :field-name="field.attribute"
+                    :field="field"
+                />
+            </div>
         </template>
     </PanelItem>
 
@@ -35,13 +46,13 @@
                 />
 
 
-                <DeleteCoverButton
+                <DeleteButton
                     class="mt-6"
+                    mode="cover"
                     :resource-id="resourceId"
                     :resource-name="resourceName"
                     :field-name="field.attribute"
                     :field="field"
-                    :is-detail-page="true"
                 />
             </template>
 

@@ -88,10 +88,6 @@ const props = defineProps({
     fieldName: {
         type: String,
         required: true
-    },
-    isDetailPage: {
-        type: Boolean,
-        default: false
     }
 })
 
@@ -129,10 +125,7 @@ async function remove() {
                 __(`The ${props.mode} has been deleted!`)
             )
 
-            props.isDetailPage
-                ? Nova.visit(`/resources/${props.resourceName}/${props.resourceId}`)
-                : Nova.visit(`/resources/${props.resourceName}/${props.resourceId}/edit`)
-
+            Nova.visit(`/resources/${props.resourceName}/${props.resourceId}`)
         })
         .catch(error => {
             Nova.error(error)
