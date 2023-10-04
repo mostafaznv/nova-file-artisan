@@ -1,5 +1,5 @@
 <template>
-    <DangerButton @click="showModal = true" type="button">
+    <DangerButton @click="showModal = true" type="button" v-bind="$attrs">
         {{ __('Delete Cover') }}
     </DangerButton>
 
@@ -68,6 +68,10 @@ const props = defineProps({
     fieldName: {
         type: String,
         required: true
+    },
+    isDetailPage: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -90,7 +94,10 @@ async function deleteCover() {
                 __('The cover has been deleted!')
             )
 
-            Nova.visit(`/resources/${props.resourceName}/${props.resourceId}/edit`)
+            props.isDetailPage
+                ? Nova.visit(`/resources/${props.resourceName}/${props.resourceId}`)
+                : Nova.visit(`/resources/${props.resourceName}/${props.resourceId}/edit`)
+
         })
         .catch(error => {
             Nova.error(error)

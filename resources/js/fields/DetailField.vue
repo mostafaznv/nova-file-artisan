@@ -24,13 +24,40 @@
             </p>
         </template>
     </PanelItem>
+
+    <PanelItem :index="index + '-cover'" :field="coverField">
+        <template #value>
+            <template v-if="coverField.displayedAs.cover && coverField.displayCoverUploader">
+                <ImageLoader
+                    aspect="aspect-auto"
+                    :src="coverField.displayedAs.cover"
+                    :maxWidth="280"
+                />
+
+
+                <DeleteCoverButton
+                    class="mt-6"
+                    :resource-id="resourceId"
+                    :resource-name="resourceName"
+                    :field-name="field.attribute"
+                    :field="field"
+                    :is-detail-page="true"
+                />
+            </template>
+
+            <span v-else>&mdash;</span>
+        </template>
+    </PanelItem>
 </template>
 
 <script>
 import FilePreview from '../components/FilePreview.vue'
+import DeleteCoverButton from "../components/DeleteCoverButton.vue";
+
 
 export default {
     components: {
+        DeleteCoverButton,
         FilePreview
     },
     props: ['resource', 'resourceName', 'resourceId', 'field', 'index'],
@@ -48,6 +75,13 @@ export default {
         shouldShowToolbar() {
             return Boolean(this.field.downloadable && this.field.thumbnailUrl)
         },
+
+        coverField() {
+            return {
+                ...this.field,
+                name: this.field.name + ' (' + this.__('Cover') + ')'
+            }
+        }
     },
     methods: {
         download() {
