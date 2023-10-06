@@ -73,6 +73,56 @@ class Attachment extends Resource
 
 That's it, you're ready to go!
 
+
+## Get Attachment Metadata
+You can print extracted metadata from your files using `NovaLaruploadMeta` field. This field is a read-only field, and it is only used to display metadata.
+
+```php  
+<?php
+
+namespace App\Nova;
+
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Models\Attachment as Model;
+use Mostafaznv\NovaLarupload\Fields\NovaLarupload;
+use Mostafaznv\NovaLarupload\Fields\NovaLaruploadMeta;
+
+
+class Attachment extends Resource
+{
+    public static string $model = Model::class;
+
+    public static $title = 'title';
+
+
+    public function fields(NovaRequest $request): array
+    {
+        return [
+            ID::make()->sortable(),
+
+            Text::make('Title')->rules('required', 'max:255'),
+
+            NovaLarupload::make('Main File', 'main_file'),
+
+            // print all metadata
+            ...NovaLaruploadMeta::make('main_file')->all(),
+            
+            // or print specific metadata
+            NovaLaruploadMeta::make('main_file')->fileName(),
+            NovaLaruploadMeta::make('main_file')->size(),
+            NovaLaruploadMeta::make('main_file')->mimeType(),
+            NovaLaruploadMeta::make('main_file')->width(),
+            NovaLaruploadMeta::make('main_file')->height(),
+            NovaLaruploadMeta::make('main_file')->duration(),
+            NovaLaruploadMeta::make('main_file')->format(),
+        ];
+    }
+}
+```
+
+
 ----
 
 I am on an open-source journey 🚀, and I wish I could solely focus on my development path without worrying about my financial situation. However, as life is not perfect, I have to consider other factors.
