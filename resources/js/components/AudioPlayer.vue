@@ -1,26 +1,35 @@
 <template>
     <div class="audio" :class="{small: !isDetails}">
-        <audio
-            :src="src"
-            :class="isDetails ? 'w-full' : ''"
-            controlslist="nodownload"
-            controls
-        />
+        <media-player @click.stop.prevent ref="player" :title="meta.name" :src="src" crossorigin>
+            <media-provider></media-provider>
+            <media-audio-layout></media-audio-layout>
+        </media-player>
     </div>
 </template>
 
 <script setup>
-import {defineProps} from 'vue'
+import {ref, onBeforeUnmount} from 'vue'
+
 
 const props = defineProps({
     src: {
         type: String,
         required: true
     },
+    meta: {
+        type: Object,
+        required: true
+    },
     isDetails: {
         type: Boolean,
         required: true
     }
+})
+
+const player = ref(null)
+
+onBeforeUnmount(() => {
+    player.value?.pause()
 })
 </script>
 

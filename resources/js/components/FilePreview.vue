@@ -18,6 +18,7 @@
     <AudioPlayer
         v-else-if="isAudio"
         :src="field.original"
+        :meta="field.meta"
         :is-details="isDetails"
     />
 
@@ -29,7 +30,7 @@
 </template>
 
 <script setup>
-import {computed, defineProps} from 'vue'
+import {computed} from 'vue'
 import VideoPlayer from './VideoPlayer.vue'
 import AudioPlayer from './AudioPlayer.vue'
 
