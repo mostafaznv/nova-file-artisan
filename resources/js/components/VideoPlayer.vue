@@ -1,6 +1,6 @@
 <template>
     <div class="video" :class="{small: !isDetails}">
-        <media-player @click.stop.prevent class="media-player" :title="meta.name" :src="src" crossorigin>
+        <media-player @click.stop.prevent ref="player" class="media-player" :title="meta.name" :src="src" crossorigin>
             <media-poster
                 v-if="poster"
                 class="vds-poster"
@@ -11,11 +11,11 @@
             <media-provider></media-provider>
             <media-video-layout></media-video-layout>
         </media-player>
-
     </div>
 </template>
 
 <script setup>
+import {onBeforeUnmount, ref} from 'vue'
 import 'vidstack/player'
 import 'vidstack/player/layouts'
 import 'vidstack/player/ui'
@@ -40,6 +40,11 @@ const props = defineProps({
     }
 })
 
+const player = ref(null)
+
+onBeforeUnmount(() => {
+    player.value?.pause()
+})
 </script>
 
 <style lang="scss" scoped>

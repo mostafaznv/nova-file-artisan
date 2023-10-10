@@ -15,21 +15,6 @@ mix.setPublicPath('dist')
         }
     })
     .webpackConfig({
-        /*module: {
-            rules: [
-                {
-                    test: /\.tsx?$/,
-                    loader: 'ts-loader',
-                    options: {appendTsSuffixTo: [/\.vue$/]},
-                    exclude: /node_modules/,
-                },
-            ],
-        },
-
-        resolve: {
-            extensions: ['*', '.js', '.jsx', '.vue', '.ts', '.tsx'],
-        },*/
-
         plugins: [
             new webpack.optimize.LimitChunkCountPlugin({
                 maxChunks: 1,
