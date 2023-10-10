@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import {computed, defineProps} from 'vue'
+import {computed} from 'vue'
 import VideoPlayer from './VideoPlayer.vue'
 import AudioPlayer from './AudioPlayer.vue'
 

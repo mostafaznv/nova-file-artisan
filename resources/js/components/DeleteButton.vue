@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import {defineProps, ref, computed} from 'vue'
+import {ref, computed} from 'vue'
 import {useLocalization} from 'laravel-nova'
 
 

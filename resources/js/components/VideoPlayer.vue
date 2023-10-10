@@ -1,17 +1,25 @@
 <template>
     <div class="video" :class="{small: !isDetails}">
-        <video
-            controlslist="nodownload"
-            :src="src"
-            :autoplay="false"
-            :controls="true"
-            :playsinline="true"
-        />
+        <media-player @click.stop.prevent class="media-player" :title="meta.name" :src="src" crossorigin>
+            <media-poster
+                v-if="poster"
+                class="vds-poster"
+                :src="poster"
+                :alt="meta.name"
+            />
+
+            <media-provider></media-provider>
+            <media-video-layout></media-video-layout>
+        </media-player>
+
     </div>
 </template>
 
 <script setup>
-import {defineProps} from 'vue'
+import 'vidstack/player'
+import 'vidstack/player/layouts'
+import 'vidstack/player/ui'
+
 
 const props = defineProps({
     src: {
@@ -42,8 +50,15 @@ const props = defineProps({
     max-width: 800px;
     display: inline-block;
 
+
     &.small {
         max-width: 270px;
+    }
+
+    ::v-deep(.vds-poster) {
+        img {
+            object-fit: cover;
+        }
     }
 }
 </style>
