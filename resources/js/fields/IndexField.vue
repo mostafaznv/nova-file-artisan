@@ -3,6 +3,7 @@
         <FilePreview
             v-if="field.previewUrl"
             :field="field.displayedAs"
+            :dir="field.playerDirection"
             :is-details="false"
         />
 

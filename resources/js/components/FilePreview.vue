@@ -4,6 +4,7 @@
         :src="field.original"
         :poster="field.cover ?? ''"
         :meta="field.meta"
+        :dir="dir"
         :is-details="isDetails"
     />
 
@@ -19,6 +20,7 @@
         v-else-if="isAudio"
         :src="field.original"
         :meta="field.meta"
+        :dir="dir"
         :is-details="isDetails"
     />
 
@@ -39,6 +41,13 @@ const props = defineProps({
     field: {
         type: Object,
         required: true
+    },
+    dir: {
+        type: String,
+        default: 'ltr',
+        validator(value) {
+            return ['ltr', 'rtl', 'auto'].includes(value)
+        }
     },
     isDetails: {
         type: Boolean,

@@ -1,5 +1,5 @@
 <template>
-    <div class="video" :class="{small: !isDetails}">
+    <div class="video" :dir="dir" :class="{small: !isDetails}">
         <media-player @click.stop.prevent ref="player" class="media-player" :title="meta.name" :src="src" crossorigin>
             <media-poster
                 v-if="poster"
@@ -33,6 +33,13 @@ const props = defineProps({
     meta: {
         type: Object,
         required: true
+    },
+    dir: {
+        type: String,
+        default: 'ltr',
+        validator(value) {
+            return ['ltr', 'rtl', 'auto'].includes(value)
+        }
     },
     isDetails: {
         type: Boolean,

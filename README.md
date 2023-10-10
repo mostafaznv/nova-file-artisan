@@ -38,6 +38,12 @@ To get started, you will need to install the following dependency:
 composer require mostafaznv/nova-larupload
 ```
 
+Next, you should publish the package's configuration file using the `vendor:publish` Artisan command. This configuration file will be placed in your application's `config` directory:
+
+```shell
+php artisan vendor:publish --provider="Mostafaznv\NovaLarupload\NovaLaruploadServiceProvider"
+```
+
 Then, you should add NovaLarupload field to your resources:
 ```php
 <?php

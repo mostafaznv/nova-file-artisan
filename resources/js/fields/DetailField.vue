@@ -4,6 +4,7 @@
             <template v-if="shouldShowFile">
                 <FilePreview
                     :field="field.displayedAs"
+                    :dir="field.playerDirection"
                     :is-details="true"
                 />
             </template>
