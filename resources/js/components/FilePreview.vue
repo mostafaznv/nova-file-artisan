@@ -18,6 +18,7 @@
     <AudioPlayer
         v-else-if="isAudio"
         :src="field.original"
+        :meta="field.meta"
         :is-details="isDetails"
     />
 
