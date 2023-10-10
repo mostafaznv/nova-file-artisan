@@ -137,6 +137,9 @@ class NovaLarupload extends File
 
         return [
             ...parent::jsonSerialize(),
+
+            'playerDirection' => config('nova-larupload.ui.player.dir'),
+
             'displayCoverUploader' => $this->displayCoverUploader !== null
                 ? $this->displayCoverUploader
                 : ($attachment?->getGenerateCoverStatus() ?? true)

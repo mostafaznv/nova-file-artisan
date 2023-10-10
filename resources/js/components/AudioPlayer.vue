@@ -1,5 +1,5 @@
 <template>
-    <div class="audio" :class="{small: !isDetails}">
+    <div class="audio" :dir="dir" :class="{small: !isDetails}">
         <media-player @click.stop.prevent ref="player" :title="meta.name" :src="src" crossorigin>
             <media-provider></media-provider>
             <media-audio-layout></media-audio-layout>
@@ -19,6 +19,13 @@ const props = defineProps({
     meta: {
         type: Object,
         required: true
+    },
+    dir: {
+        type: String,
+        default: 'ltr',
+        validator(value) {
+            return ['ltr', 'rtl', 'auto'].includes(value)
+        }
     },
     isDetails: {
         type: Boolean,

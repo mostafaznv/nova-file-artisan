@@ -14,5 +14,9 @@ class NovaLaruploadServiceProvider extends ServiceProvider
             Nova::script('nova-larupload', __DIR__ . '/../dist/field.js');
             Nova::style('nova-larupload', __DIR__ . '/../dist/field.css');
         });
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([__DIR__ . '/../config/config.php' => config_path('nova-larupload.php')], 'config');
+        }
     }
 }
