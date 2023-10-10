@@ -19,4 +19,9 @@ class NovaLaruploadServiceProvider extends ServiceProvider
             $this->publishes([__DIR__ . '/../config/config.php' => config_path('nova-larupload.php')], 'config');
         }
     }
+
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'nova-larupload');
+    }
 }
