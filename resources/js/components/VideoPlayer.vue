@@ -59,7 +59,6 @@ onBeforeUnmount(() => {
     position: relative;
     width: 100%;
     min-width: 300px;
-    max-width: 800px;
     display: inline-block;
 
 
