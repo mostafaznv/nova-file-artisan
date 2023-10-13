@@ -1,15 +1,16 @@
 <template>
     <div class="video" :dir="dir" :class="{small: !isDetails}">
-        <media-player @click.stop.prevent ref="player" class="media-player" :title="meta.name" :src="src" crossorigin>
-            <media-poster
-                v-if="poster"
-                class="vds-poster"
-                :src="poster"
-                :alt="meta.name"
-            />
-
-            <media-provider></media-provider>
-            <media-video-layout></media-video-layout>
+        <media-player
+            @click.stop.prevent
+            ref="player"
+            class="media-player"
+            :title="title"
+            :src="src"
+            crossorigin
+        >
+            <media-poster v-if="poster" class="vds-poster" :src="poster" :alt="title" />
+            <media-provider/>
+            <media-video-layout/>
         </media-player>
     </div>
 </template>
@@ -21,18 +22,19 @@ import 'vidstack/player/layouts'
 import 'vidstack/player/ui'
 
 
+// variables
 const props = defineProps({
+    title: {
+        type: String,
+        required: true
+    },
     src: {
         type: String,
         required: true
     },
     poster: {
         type: String,
-        required: true
-    },
-    meta: {
-        type: Object,
-        required: true
+        default: ''
     },
     dir: {
         type: String,
@@ -49,6 +51,8 @@ const props = defineProps({
 
 const player = ref(null)
 
+
+// hooks
 onBeforeUnmount(() => {
     player.value?.pause()
 })
