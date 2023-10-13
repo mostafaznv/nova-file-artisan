@@ -1,9 +1,7 @@
 <template>
-    <VideoPlayer
+    <VideoPreview
         v-if="isVideo"
-        :src="field.original"
-        :poster="field.cover ?? ''"
-        :meta="field.meta"
+        :field="field"
         :dir="dir"
         :is-details="isDetails"
     />
@@ -33,7 +31,7 @@
 
 <script setup>
 import {computed} from 'vue'
-import VideoPlayer from './VideoPlayer.vue'
+import VideoPreview from './VideoPreview.vue'
 import AudioPlayer from './AudioPlayer.vue'
 
 
