@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <!-- VIDEO QUALITIES -->
-        <template v-if="isDetails && styles.length">
+    <div :class="{'is-details': isDetails}">
+        <!-- IMAGE STYLES -->
+        <div v-if="isDetails && styles.length">
             <ul class="flex overflow-x-auto text-sm font-medium text-center text-gray-500 dark:text-gray-400 pb-3">
                 <li v-for="(style, index) in styles" class="mr-2" :key="index">
                     <a
@@ -22,44 +22,29 @@
                 <div v-if="selectedStyle === index">
                     <loading-view v-if="loading" :loading="true"/>
 
-                    <template v-else>
-                        <video-player
-                            v-if="videoExists"
-                            :title="style.name + ' - ' + field.meta.name"
-                            :src="style.url"
-                            :poster="field.cover ?? ''"
-                            :dir="dir"
-                            :is-details="isDetails"
-                        />
-
-                        <div v-else class="flex justify-center items-center help-text p-8">
-                            <Icon type="video-camera" class="mr-1"/>
-                            <span>{{ __('Video Not Found') }}</span>
-                        </div>
-                    </template>
+                    <img
+                        v-else
+                        :src="style.url"
+                        :alt="style.name + ' - ' + field.meta.name"
+                    />
                 </div>
             </template>
-        </template>
+        </div>
 
 
-        <!-- ORIGINAL VIDEO -->
-        <video-player
-            v-else
-            :title="field.meta.name"
-            :src="field.original"
-            :poster="field.cover ?? ''"
-            :dir="dir"
-            :is-details="isDetails"
-        />
+        <!-- ORIGINAL IMAGE -->
+        <div class="image-loader">
+            <image-loader
+                :src="field.original"
+                :maxWidth="maxWidth"
+                :aspect="aspect"
+            />
+        </div>
     </div>
 </template>
 
 <script setup>
 import {ref, computed} from 'vue'
-import VideoPlayer from './VideoPlayer.vue'
-import 'vidstack/player'
-import 'vidstack/player/layouts'
-import 'vidstack/player/ui'
 
 
 const emit = defineEmits([
@@ -73,13 +58,6 @@ const props = defineProps({
         type: Object,
         required: true
     },
-    dir: {
-        type: String,
-        default: 'ltr',
-        validator(value) {
-            return ['ltr', 'rtl', 'auto'].includes(value)
-        }
-    },
     isDetails: {
         type: Boolean,
         required: true
@@ -92,7 +70,6 @@ const props = defineProps({
 
 const selectedStyle = ref(0)
 const loading = ref(false)
-const videoExists = ref(true)
 
 
 // computed properties
@@ -108,15 +85,16 @@ const styles = computed(() => {
         }
     ]
 
-    delete obj.cover
-    delete obj.meta
     delete obj.original
+    delete obj.cover
+    delete obj.stream
+    delete obj.meta
 
     for (const [key, value] of Object.entries(obj)) {
         if (value) {
-            const isVideo = value.endsWith('mp4') || value.endsWith('webm') || value.endsWith('m3u8')
+            const isImage = value.endsWith('png') || value.endsWith('jpg') || value.endsWith('jpeg') || value.endsWith('webp') || value.endsWith('gif')
 
-            if (isVideo) {
+            if (isImage) {
                 styles.push({
                     name: key,
                     url: value
@@ -128,29 +106,42 @@ const styles = computed(() => {
     return styles
 })
 
+const maxWidth = computed(() => {
+    return props.isDetails ? 220 : 64
+})
+
+const aspect = computed(() => {
+    return props.isDetails ? 'aspect-auto' : 'aspect-square'
+})
+
 
 // methods
 async function select(style, index) {
     loading.value = true
     selectedStyle.value = index
 
-    videoExists.value = await checkUrlExists(style.url)
-
     loading.value = false
 
     emit('update:style', style.name)
 }
+</script>
 
-async function checkUrlExists(url) {
-    try {
-        const response = await fetch(url, {
-            method: 'HEAD',
-        });
+<style lang="scss" scoped>
+img {
+    max-width: 100%;
+}
 
-        return response.ok || (response.status >= 300 && response.status < 400);
-    }
-    catch (error) {
-        return false
+.image-loader {
+    ::v-deep(img) {
+        object-fit: cover;
     }
 }
-</script>
+
+.is-details {
+    .image-loader {
+        ::v-deep(img) {
+            display: none;
+        }
+    }
+}
+</style>

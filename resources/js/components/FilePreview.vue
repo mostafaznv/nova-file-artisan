@@ -1,20 +1,23 @@
 <template>
-    <VideoPreview
+    <video-preview
+        @update:style="updateStyle"
         v-if="isVideo"
         :field="field"
         :dir="dir"
         :is-details="isDetails"
+        :style="style"
     />
 
     <div v-else-if="isImage" class="inline-block">
-        <ImageLoader
-            :src="field.original"
-            :maxWidth="maxWidth"
-            :aspect="aspect"
+        <image-preview
+            @update:style="updateStyle"
+            :field="field"
+            :is-details="isDetails"
+            :style="style"
         />
     </div>
 
-    <AudioPlayer
+    <audio-player
         v-else-if="isAudio"
         :src="field.original"
         :meta="field.meta"
@@ -33,8 +36,15 @@
 import {computed} from 'vue'
 import VideoPreview from './VideoPreview.vue'
 import AudioPlayer from './AudioPlayer.vue'
+import ImagePreview from "./ImagePreview.vue";
 
 
+const emit = defineEmits([
+    'update:style'
+])
+
+
+// variables
 const props = defineProps({
     field: {
         type: Object,
@@ -50,6 +60,10 @@ const props = defineProps({
     isDetails: {
         type: Boolean,
         required: true
+    },
+    style: {
+        type: String,
+        default: 'original'
     }
 })
 
@@ -67,16 +81,9 @@ const isAudio = computed(() => {
     return props.field.meta.type === 'AUDIO'
 })
 
-const maxWidth = computed(() => {
-    return props.isDetails ? 220 : 64
-})
 
-const aspect = computed(() => {
-    return props.isDetails ? 'aspect-auto' : 'aspect-square'
-})
-
+// methods
+const updateStyle = (style) => {
+    emit('update:style', style)
+}
 </script>
-
-<style lang="scss" scoped>
-
-</style>
