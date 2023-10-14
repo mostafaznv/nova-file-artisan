@@ -1,5 +1,5 @@
 <template>
-    <VideoPreview
+    <video-preview
         v-if="isVideo"
         :field="field"
         :dir="dir"
@@ -7,14 +7,13 @@
     />
 
     <div v-else-if="isImage" class="inline-block">
-        <ImageLoader
-            :src="field.original"
-            :maxWidth="maxWidth"
-            :aspect="aspect"
+        <image-preview
+            :field="field"
+            :is-details="isDetails"
         />
     </div>
 
-    <AudioPlayer
+    <audio-player
         v-else-if="isAudio"
         :src="field.original"
         :meta="field.meta"
@@ -33,6 +32,7 @@
 import {computed} from 'vue'
 import VideoPreview from './VideoPreview.vue'
 import AudioPlayer from './AudioPlayer.vue'
+import ImagePreview from "./ImagePreview.vue";
 
 
 const props = defineProps({
@@ -66,17 +66,4 @@ const isVideo = computed(() => {
 const isAudio = computed(() => {
     return props.field.meta.type === 'AUDIO'
 })
-
-const maxWidth = computed(() => {
-    return props.isDetails ? 220 : 64
-})
-
-const aspect = computed(() => {
-    return props.isDetails ? 'aspect-auto' : 'aspect-square'
-})
-
 </script>
-
-<style lang="scss" scoped>
-
-</style>
