@@ -150,8 +150,6 @@ async function checkUrlExists(url) {
         return response.ok || (response.status >= 300 && response.status < 400);
     }
     catch (error) {
-        console.log('error occurred while checking if video url')
-        console.log(url)
         return false
     }
 }
