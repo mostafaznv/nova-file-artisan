@@ -5,6 +5,7 @@ namespace Mostafaznv\NovaLarupload\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\SupportsDependentFields;
+use Mostafaznv\Larupload\Enums\LaruploadFileType;
 use Mostafaznv\Larupload\Storage\Attachment;
 use Mostafaznv\NovaLarupload\Traits\HandlesValidation;
 
@@ -58,9 +59,42 @@ class NovaLarupload extends File
             }
         );
 
-        $this->download(
-            fn($request, $model) => $model->attachment($attachment)->download()
-        );
+        $this->downloadResponseCallback = function(NovaRequest $request, $model) use ($attachment) {
+            $style = $request->query('style') ?? 'original';
+
+            if ($style == 'original') {
+                return $model->attachment($attachment)->download();
+            }
+
+
+            $meta = $model->attachment($attachment)->meta();
+            $a = $this->attachment($model, $attachment);
+
+            if ($meta->type == LaruploadFileType::VIDEO->name) {
+                $styles = $a->getVideoStyles();
+            }
+            else if ($meta->type == LaruploadFileType::IMAGE->name) {
+                $styles = $a->getImageStyles();
+            }
+            else {
+                $styles = [];
+            }
+
+
+            foreach ($styles as $key => $value) {
+                if (strtolower($key) == strtolower($style)) {
+                    $style = $key;
+                }
+            }
+
+            $response =  $model->attachment($attachment)->download($style);
+
+            if (is_null($response)) {
+                abort(404);
+            }
+
+            return $response;
+        };
 
 
         $this->storageCallback = function(NovaRequest $request, $model) use ($attachment) {

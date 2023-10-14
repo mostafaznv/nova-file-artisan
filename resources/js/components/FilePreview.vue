@@ -1,15 +1,19 @@
 <template>
     <video-preview
+        @update:style="updateStyle"
         v-if="isVideo"
         :field="field"
         :dir="dir"
         :is-details="isDetails"
+        :style="style"
     />
 
     <div v-else-if="isImage" class="inline-block">
         <image-preview
+            @update:style="updateStyle"
             :field="field"
             :is-details="isDetails"
+            :style="style"
         />
     </div>
 
@@ -35,6 +39,12 @@ import AudioPlayer from './AudioPlayer.vue'
 import ImagePreview from "./ImagePreview.vue";
 
 
+const emit = defineEmits([
+    'update:style'
+])
+
+
+// variables
 const props = defineProps({
     field: {
         type: Object,
@@ -50,6 +60,10 @@ const props = defineProps({
     isDetails: {
         type: Boolean,
         required: true
+    },
+    style: {
+        type: String,
+        default: 'original'
     }
 })
 
@@ -66,4 +80,10 @@ const isVideo = computed(() => {
 const isAudio = computed(() => {
     return props.field.meta.type === 'AUDIO'
 })
+
+
+// methods
+const updateStyle = (style) => {
+    emit('update:style', style)
+}
 </script>

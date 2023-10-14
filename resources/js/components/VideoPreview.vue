@@ -7,7 +7,7 @@
                     <a
                         @click="select(style, index)"
                         href="javascript:;"
-                        class="inline-block whitespace-nowrap rounded-lg px-4 py-3"
+                        class="inline-block whitespace-nowrap uppercase rounded-lg px-4 py-3"
                         :class="{
                             'hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300': selectedStyle !== index,
                             'text-blue-600 bg-gray-100 dark:bg-gray-800 dark:text-blue-500 active': selectedStyle === index
@@ -62,6 +62,11 @@ import 'vidstack/player/layouts'
 import 'vidstack/player/ui'
 
 
+const emit = defineEmits([
+    'update:style'
+])
+
+
 // variables
 const props = defineProps({
     field: {
@@ -78,6 +83,10 @@ const props = defineProps({
     isDetails: {
         type: Boolean,
         required: true
+    },
+    style: {
+        type: String,
+        default: 'original'
     }
 })
 
@@ -94,7 +103,7 @@ const styles = computed(() => {
 
     const styles = [
         {
-            name: 'ORIGINAL',
+            name: 'original',
             url: obj.original
         }
     ]
@@ -109,7 +118,7 @@ const styles = computed(() => {
 
             if (isVideo) {
                 styles.push({
-                    name: key.toUpperCase(),
+                    name: key,
                     url: value
                 })
             }
@@ -128,6 +137,8 @@ async function select(style, index) {
     videoExists.value = await checkUrlExists(style.url)
 
     loading.value = false
+
+    emit('update:style', style.name)
 }
 
 async function checkUrlExists(url) {

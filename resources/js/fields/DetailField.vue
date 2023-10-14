@@ -3,6 +3,7 @@
         <template #value>
             <template v-if="shouldShowFile">
                 <FilePreview
+                    v-model:style="style"
                     :field="field.displayedAs"
                     :dir="field.playerDirection"
                     :is-details="true"
@@ -18,6 +19,7 @@
                         @keydown.enter.prevent="download"
                         @click.prevent="download"
                         :dusk="field.attribute + '-download-link'"
+                        :disabled="style === 'stream'"
                         tabindex="0"
                     >
                         <Icon class="mr-2" type="download" width="16" height="16" />
@@ -77,6 +79,7 @@ export default {
         return {
             src: this.field.previewUrl,
             autoplay: false,
+            style: 'original'
         }
     },
     computed: {
@@ -97,11 +100,11 @@ export default {
     },
     methods: {
         download() {
-            const {resourceName, resourceId} = this
+            const {resourceName, resourceId, style} = this
             const attribute = this.field.attribute
 
             let link = document.createElement('a')
-            link.href = `/nova-api/${resourceName}/${resourceId}/download/${attribute}`
+            link.href = `/nova-api/${resourceName}/${resourceId}/download/${attribute}?style=${style}`
             link.download = 'download'
             document.body.appendChild(link)
             link.click()
