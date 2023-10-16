@@ -46,7 +46,7 @@
                     :maxWidth="280"
                 />
 
-                <div class="flex items-center text-sm mt-3 gap-6">
+                <div v-if="field.downloadable" class="flex items-center text-sm mt-3 gap-6">
                     <p class="flex items-center">
                         <LinkButton
                             @keydown.enter.prevent="download('cover')"
