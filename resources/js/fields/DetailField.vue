@@ -15,13 +15,12 @@
             <div class="flex items-center text-sm mt-3 gap-6">
                 <p v-if="shouldShowToolbar" class="flex items-center">
                     <LinkButton
-                        @keydown.enter.prevent="download"
-                        @click.prevent="download"
-                        :dusk="field.attribute + '-download-link'"
+                        @keydown.enter.prevent="download(null)"
+                        @click.prevent="download(null)"
                         :disabled="style === 'stream'"
                         tabindex="0"
                     >
-                        <Icon class="mr-2" type="download" width="16" height="16" />
+                        <Icon class="mr-2" type="download" width="16" height="16"/>
                         <span class="class mt-1">{{ __('Download') }}</span>
                     </LinkButton>
                 </p>
@@ -46,6 +45,19 @@
                     :src="coverField.displayedAs.cover"
                     :maxWidth="280"
                 />
+
+                <div class="flex items-center text-sm mt-3 gap-6">
+                    <p class="flex items-center">
+                        <LinkButton
+                            @keydown.enter.prevent="download('cover')"
+                            @click.prevent="download('cover')"
+                            tabindex="1"
+                        >
+                            <Icon class="mr-2" type="download" width="16" height="16"/>
+                            <span class="class mt-1">{{ __('Download') }}</span>
+                        </LinkButton>
+                    </p>
+                </div>
 
                 <!--<DeleteButton
                     class="mt-6"
@@ -97,8 +109,9 @@ export default {
         }
     },
     methods: {
-        download() {
-            const {resourceName, resourceId, style} = this
+        download(s = null) {
+            const {resourceName, resourceId} = this
+            const style = s ?? this.style
             const attribute = this.field.attribute
 
             let link = document.createElement('a')
