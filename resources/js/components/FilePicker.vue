@@ -104,7 +104,7 @@ export default {
                 return 'image/png, image/jpeg'
             }
 
-            return null
+            return this.field.acceptedTypes
         },
 
         files() {
