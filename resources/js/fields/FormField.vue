@@ -12,6 +12,7 @@
                 <file-picker
                     v-model="file"
                     v-bind="$props"
+                    @file-deleted="onDeleteOriginalFile"
                     :cover="cover"
                     :errors="errors"
                 />
@@ -27,8 +28,10 @@
 
             <div :class="controlWrapperClasses">
                 <file-picker
+                    ref="cover"
                     v-model="cover"
                     v-bind="$props"
+                    @file-deleted="onDeleteFile"
                     :errors="errors"
                     :is-cover="true"
                 />
@@ -72,6 +75,17 @@ export default {
     watch: {
         file(value) {
             this.emitFieldValueChange(this.currentField.attribute, value)
+        }
+    },
+    methods: {
+        onDeleteFile() {
+            this.$emit('file-deleted')
+            this.$emit('field-changed')
+        },
+
+        onDeleteOriginalFile() {
+            this.$refs.cover.afterRemove()
+            this.onDeleteFile()
         }
     },
     async mounted() {

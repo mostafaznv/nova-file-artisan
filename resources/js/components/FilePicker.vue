@@ -63,7 +63,8 @@ export default {
         'removeFile'
     ],
     expose: [
-        'beforeRemove'
+        'beforeRemove',
+        'afterRemove'
     ],
     data: () => ({
         file: null,
@@ -166,8 +167,7 @@ export default {
                     errors[this.fieldAttribute] = e.errors[attribute]
 
                     this.uploadErrors = new Errors(errors)
-                }
-                else {
+                } else {
                     this.uploadErrors = new Errors()
                 }
             }
@@ -214,12 +214,18 @@ export default {
             this.removeUploadedFile()
         },
 
+        afterRemove() {
+            this.deleted = true
+            this.file = null
+        },
+
         async removeUploadedFile() {
             try {
-                await this.removeFile(this.fieldAttribute)
+                await this.removeFile()
+
+                this.afterRemove()
+
                 this.$emit('file-deleted')
-                this.deleted = true
-                this.file = null
                 Nova.success(this.__('The file was deleted!'))
             }
             catch (error) {
@@ -243,20 +249,12 @@ export default {
 
             const query = '?cover=' + (this.isCover ? 'true' : 'false')
 
-            try {
-                await Nova.request().delete(uri + query)
-                this.closeRemoveModal()
-                this.deleted = true
-                this.$emit('file-deleted')
-                Nova.success(this.__('The file was deleted!'))
-            }
-            catch (error) {
-                this.closeRemoveModal()
+            await Nova.request()
+                .delete(uri + query)
+                .finally(() => {
+                    this.deleted = true
+                })
 
-                if (error.response.status === 422) {
-                    this.uploadErrors = new Errors(error.response.data.errors)
-                }
-            }
         }
     },
     async mounted() {
