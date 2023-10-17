@@ -1,28 +1,52 @@
 <template>
-    <file-picker
-        v-model="file"
-        v-bind="$props"
-        :original-attribute-name="field.attribute"
-        :cover="cover"
-    />
+    <div class="divide-y divide-gray-100 dark:divide-gray-700">
+        <DefaultField
+            :field="currentField"
+            :label-for="labelFor"
+            :errors="errors"
+            :show-errors="false"
+            :show-help-text="!isReadonly && showHelpText"
+            :full-width-content="fullWidthContent"
+        >
+            <template #field>
+                <file-picker
+                    v-model="file"
+                    v-bind="$props"
+                    :cover="cover"
+                    :errors="errors"
+                />
+            </template>
+        </DefaultField>
 
-    {{  }}
+        <div v-if="(file || resourceId) && field.displayCoverUploader && currentlyIsVisible" :class="fieldWrapperClasses">
+            <div v-if="field.withLabel" :class="labelClasses">
+                <FormLabel class="space-x-1" :label-for="labelFor + '-cover'">
+                    <span>{{ field.indexName + ' (' + __('Cover') + ')' }}</span>
+                </FormLabel>
+            </div>
 
-    <file-picker
-        v-if="(file || resourceId) && coverProps && coverProps.field.displayCoverUploader"
-        v-model="cover"
-        v-bind="coverProps"
-        :original-attribute-name="field.attribute"
-        :errors="errors"
-        :is-cover="true"
-    />
+            <div :class="controlWrapperClasses">
+                <file-picker
+                    v-model="cover"
+                    v-bind="$props"
+                    :errors="errors"
+                    :is-cover="true"
+                />
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+import {DependentFormField} from 'laravel-nova'
 import FilePicker from '../components/FilePicker.vue'
+import FormFieldMixin from '../mixins/form-field'
 
 
 export default {
+    mixins: [
+        DependentFormField, FormFieldMixin
+    ],
     props: [
         'resourceName', 'resourceId', 'relatedResourceName',
         'relatedResourceId', 'viaRelationship', 'field', 'errors'
@@ -32,26 +56,36 @@ export default {
     },
     data: () => ({
         file: null,
-        cover: null,
-        coverProps: null
+        cover: null
     }),
-    created() {
-        const coverProps = JSON.parse(JSON.stringify(this.$props))
-        const attribute = coverProps.field.attribute
-        const coverAttribute = attribute + '_cover'
+    computed: {
+        labelFor() {
+            let name = this.resourceName
 
+            if (this.relatedResourceName) {
+                name += '-' + this.relatedResourceName
+            }
 
-        coverProps.field.attribute = coverAttribute
-        coverProps.field.indexName = coverProps.field.indexName + '(Cover)'
-        coverProps.field.name = coverProps.field.indexName
-        coverProps.field.sortableUriKey = coverProps.field.sortableUriKey + '_cover'
-        coverProps.field.uniqueKey = coverProps.field.uniqueKey.replace(attribute, coverAttribute)
-        coverProps.field.dependentComponentKey = coverProps.field.dependentComponentKey.replace(attribute, coverAttribute)
-        coverProps.field.validationKey = coverProps.field.validationKey.replace('.original', '.cover')
-        coverProps.field.value = coverProps.field.thumbnailUrl
-        coverProps.field.previewUrl = coverProps.field.thumbnailUrl
+            return `file-${name}-${this.fieldAttribute}`
+        }
+    },
+    watch: {
+        file(value) {
+            this.emitFieldValueChange(this.currentField.attribute, value)
+        }
+    },
+    async mounted() {
+        this.field.fill = formData => {
+            let attribute = this.fieldAttribute
 
-        this.coverProps = coverProps
-    }
+            if (this.file) {
+                formData.append(attribute + '[original]', this.file.originalFile, this.file.name)
+            }
+
+            if (this.cover) {
+                formData.append(attribute + '[cover]', this.cover.originalFile, this.cover.name)
+            }
+        }
+    },
 }
 </script>
