@@ -19,7 +19,7 @@
             </template>
         </DefaultField>
 
-        <div v-if="(file || resourceId) && field.displayCoverUploader && currentlyIsVisible" :class="fieldWrapperClasses">
+        <div v-show="(file || isEditable) && field.displayCoverUploader && currentlyIsVisible" :class="fieldWrapperClasses">
             <div v-if="field.withLabel" :class="labelClasses">
                 <FormLabel class="space-x-1" :label-for="labelFor + '-cover'">
                     <span>{{ field.indexName + ' (' + __('Cover') + ')' }}</span>
@@ -59,7 +59,8 @@ export default {
     },
     data: () => ({
         file: null,
-        cover: null
+        cover: null,
+        originalFileDeleted: false
     }),
     computed: {
         labelFor() {
@@ -70,6 +71,12 @@ export default {
             }
 
             return `file-${name}-${this.fieldAttribute}`
+        },
+
+        isEditable() {
+            return this.resourceId
+                && this.field.previewUrl !== null
+                && !this.originalFileDeleted
         }
     },
     watch: {
@@ -86,6 +93,8 @@ export default {
         onDeleteOriginalFile() {
             this.$refs.cover.afterRemove()
             this.onDeleteFile()
+
+            this.originalFileDeleted = true
         }
     },
     async mounted() {
