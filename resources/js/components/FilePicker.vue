@@ -1,54 +1,39 @@
 <template>
-    <DefaultField
-        :field="currentField"
-        :label-for="labelFor"
-        :errors="errors"
-        :show-help-text="!isReadonly && showHelpText"
-        :full-width-content="fullWidthContent"
-    >
-        <template #field>
-            <!-- ORIGINAL FILE -->
-            <div class="space-y-4">
-                <div
-                    v-if="hasValue && previewFile && files.length === 0"
-                    class="grid grid-cols-4 gap-x-6 gap-y-2"
-                >
-                    <FilePreviewBlock
-                        v-if="previewFile"
-                        :file="previewFile"
-                        :removable="shouldShowRemoveButton"
-                        @removed="confirmRemoval"
-                        :rounded="field.rounded"
-                        :dusk="`${field.attribute}-delete-link`"
-                    />
-                </div>
+    <div class="space-y-4">
+        <div v-if="hasValue && previewFile && files.length === 0" class="grid grid-cols-4 gap-x-6 gap-y-2">
+            <FilePreviewBlock
+                v-if="previewFile"
+                :file="previewFile"
+                :removable="shouldShowRemoveButton"
+                @removed="confirmRemoval"
+                :rounded="field.rounded"
+            />
+        </div>
 
-                <!-- Upload Removal Modal -->
-                <ConfirmUploadRemovalModal
-                    :show="removeModalOpen"
-                    @confirm="removeUploadedFile"
-                    @close="closeRemoveModal"
-                />
+        <ConfirmUploadRemovalModal
+            :show="removeModalOpen"
+            @confirm="removeUploadedFile"
+            @close="closeRemoveModal"
+        />
 
-                <!-- DropZone -->
-                <DropZone
-                    v-if="shouldShowField"
-                    :files="files"
-                    @file-changed="handleFileChange"
-                    @file-removed="file = null"
-                    :rounded="field.rounded"
-                    :accepted-types="acceptedTypes"
-                    :disabled="file?.processing"
-                    :dusk="`${field.attribute}-delete-link`"
-                    :input-dusk="field.attribute"
-                />
-            </div>
-        </template>
-    </DefaultField>
+        <DropZone
+            v-if="shouldShowField"
+            :files="files"
+            @file-changed="handleFileChange"
+            @file-removed="file = null"
+            :rounded="field.rounded"
+            :accepted-types="acceptedTypes"
+            :disabled="file?.processing"
+        />
+
+        <HelpText class="help-text-error" v-if="hasError">
+            {{ firstError }}
+        </HelpText>
+    </div>
 </template>
 
 <script>
-import {DependentFormField, HandlesValidationErrors, Errors} from 'laravel-nova'
+import {HandlesValidationErrors, Errors} from 'laravel-nova'
 
 
 function createFile(file) {
@@ -65,20 +50,21 @@ function createFile(file) {
 export default {
     name: 'FilePicker',
     mixins: [
-        HandlesValidationErrors, DependentFormField
+        HandlesValidationErrors
     ],
     emits: [
         'update:modelValue'
     ],
     props: [
-        'originalAttributeName', 'resourceId', 'resourceName', 'relatedResourceName', 'relatedResourceId',
+        'resourceId', 'resourceName', 'relatedResourceName', 'relatedResourceId',
         'viaRelationship', 'field', 'cover', 'isCover', 'errors'
     ],
     inject: [
         'removeFile'
     ],
     expose: [
-        'beforeRemove'
+        'beforeRemove',
+        'afterRemove'
     ],
     data: () => ({
         file: null,
@@ -99,12 +85,32 @@ export default {
         uploadModalShown: false,
     }),
     computed: {
+        value() {
+            if (this.isCover) {
+                return this.field.thumbnailUrl
+            }
+
+            return this.field.value
+        },
+
+        previewUrl() {
+            if (this.isCover) {
+                return this.field.thumbnailUrl
+            }
+
+            return this.field.previewUrl
+        },
+
+        fieldAttribute() {
+            return this.field.attribute
+        },
+
         acceptedTypes() {
             if (this.isCover) {
                 return 'image/png, image/jpeg'
             }
 
-            return null
+            return this.field.acceptedTypes
         },
 
         files() {
@@ -121,46 +127,24 @@ export default {
             }
         },
 
-        idAttr() {
-            return this.labelFor
-        },
-
-        labelFor() {
-            let name = this.resourceName
-
-            if (this.relatedResourceName) {
-                name += '-' + this.relatedResourceName
-            }
-
-            return `file-${name}-${this.fieldAttribute}`
-        },
-
         hasValue() {
             return (
-                Boolean(this.field.value || this.imageUrl) &&
-                !Boolean(this.deleted) &&
-                !Boolean(this.missing)
+                Boolean(this.value || this.imageUrl)
+                && !Boolean(this.deleted)
+                && !Boolean(this.missing)
             )
         },
 
-        shouldShowLoader() {
-            return !Boolean(this.deleted) && Boolean(this.imageUrl)
-        },
-
         shouldShowField() {
-            return Boolean(!this.currentlyIsReadonly)
+            return Boolean(!this.isReadonly)
         },
 
         shouldShowRemoveButton() {
-            return Boolean(this.currentField.deletable && !this.currentlyIsReadonly)
+            return Boolean(this.field.deletable && !this.isReadonly)
         },
 
         imageUrl() {
-            return this.currentField.previewUrl || this.currentField.thumbnailUrl
-        },
-
-        maxWidth() {
-            return this.currentField.maxWidth || 320
+            return this.previewUrl || this.field.thumbnailUrl
         }
     },
     watch: {
@@ -168,6 +152,24 @@ export default {
             immediate: true,
             handler(file) {
                 this.$emit('update:modelValue', file)
+            }
+        },
+        errors: {
+            immediate: true,
+            handler(e) {
+                const attribute = this.isCover
+                    ? this.fieldAttribute + '.cover'
+                    : this.fieldAttribute + '.original'
+
+                if (e?.errors[attribute]) {
+                    const errors = {}
+
+                    errors[this.fieldAttribute] = e.errors[attribute]
+
+                    this.uploadErrors = new Errors(errors)
+                } else {
+                    this.uploadErrors = new Errors()
+                }
             }
         }
     },
@@ -179,8 +181,8 @@ export default {
 
             if (this.hasValue && !this.imageUrl) {
                 this.previewFile = createFile({
-                    name: this.currentField.value,
-                    type: this.currentField.value.split('.').pop(),
+                    name: this.value,
+                    type: this.value.split('.').pop(),
                 })
             }
         },
@@ -189,10 +191,10 @@ export default {
             let response = await fetch(this.imageUrl)
             let data = await response.blob()
 
-            const name = this.currentField.value.split('/').pop()
+            const name = this.value.split('/').pop()
 
             this.previewFile = createFile(
-                new File([data], name, { type: data.type })
+                new File([data], name, {type: data.type})
             )
         },
 
@@ -212,19 +214,26 @@ export default {
             this.removeUploadedFile()
         },
 
+        afterRemove() {
+            this.deleted = true
+            this.file = null
+        },
+
         async removeUploadedFile() {
-            //   this.uploadErrors = new Errors()
             try {
-                await this.removeFile(this.fieldAttribute)
+                await this.removeFile()
+
+                this.afterRemove()
+
                 this.$emit('file-deleted')
-                this.deleted = true
-                this.file = null
                 Nova.success(this.__('The file was deleted!'))
-            } catch (error) {
+            }
+            catch (error) {
                 if (error.response?.status === 422) {
                     this.uploadErrors = new Errors(error.response.data.errors)
                 }
-            } finally {
+            }
+            finally {
                 this.closeRemoveModal()
             }
         },
@@ -232,47 +241,24 @@ export default {
         async removeFile() {
             this.uploadErrors = new Errors()
 
-            const {resourceName, resourceId, relatedResourceName, relatedResourceId, viaRelationship} = this
-            const attribute = this.originalAttributeName
+            const {resourceName, fieldAttribute, resourceId, relatedResourceName, relatedResourceId, viaRelationship} = this
 
             const uri = this.viaRelationship
-                ? `/nova-api/${resourceName}/${resourceId}/${relatedResourceName}/${relatedResourceId}/field/${attribute}?viaRelationship=${viaRelationship}`
-                : `/nova-api/${resourceName}/${resourceId}/field/${attribute}`
+                ? `/nova-api/${resourceName}/${resourceId}/${relatedResourceName}/${relatedResourceId}/field/${fieldAttribute}?viaRelationship=${viaRelationship}`
+                : `/nova-api/${resourceName}/${resourceId}/field/${fieldAttribute}`
 
             const query = '?cover=' + (this.isCover ? 'true' : 'false')
 
-            try {
-                await Nova.request().delete(uri + query)
-                this.closeRemoveModal()
-                this.deleted = true
-                this.$emit('file-deleted')
-                Nova.success(this.__('The file was deleted!'))
-            }
-            catch (error) {
-                this.closeRemoveModal()
+            await Nova.request()
+                .delete(uri + query)
+                .finally(() => {
+                    this.deleted = true
+                })
 
-                if (error.response.status === 422) {
-                    this.uploadErrors = new Errors(error.response.data.errors)
-                }
-            }
         }
     },
     async mounted() {
         this.preparePreviewImage()
-
-        if (!this.isCover) {
-            this.field.fill = formData => {
-                let attribute = this.fieldAttribute
-
-                if (this.file) {
-                    formData.append(attribute + '[original]', this.file.originalFile, this.file.name)
-                }
-
-                if (this.cover) {
-                    formData.append(attribute + '[cover]', this.cover.originalFile, this.cover.name)
-                }
-            }
-        }
     },
 }
 </script>

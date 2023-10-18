@@ -15,26 +15,24 @@
             <div class="flex items-center text-sm mt-3 gap-6">
                 <p v-if="shouldShowToolbar" class="flex items-center">
                     <LinkButton
-                        v-if="field.downloadable"
-                        @keydown.enter.prevent="download"
-                        @click.prevent="download"
-                        :dusk="field.attribute + '-download-link'"
+                        @keydown.enter.prevent="download(null)"
+                        @click.prevent="download(null)"
                         :disabled="style === 'stream'"
                         tabindex="0"
                     >
-                        <Icon class="mr-2" type="download" width="16" height="16" />
+                        <Icon class="mr-2" type="download" width="16" height="16"/>
                         <span class="class mt-1">{{ __('Download') }}</span>
                     </LinkButton>
                 </p>
 
-                <DeleteButton
+                <!--<DeleteButton
                     v-if="shouldShowFile"
                     mode="file"
                     :resource-id="resourceId"
                     :resource-name="resourceName"
                     :field-name="field.attribute"
                     :field="field"
-                />
+                />-->
             </div>
         </template>
     </PanelItem>
@@ -48,15 +46,27 @@
                     :maxWidth="280"
                 />
 
+                <div v-if="field.downloadable" class="flex items-center text-sm mt-3 gap-6">
+                    <p class="flex items-center">
+                        <LinkButton
+                            @keydown.enter.prevent="download('cover')"
+                            @click.prevent="download('cover')"
+                            tabindex="1"
+                        >
+                            <Icon class="mr-2" type="download" width="16" height="16"/>
+                            <span class="class mt-1">{{ __('Download') }}</span>
+                        </LinkButton>
+                    </p>
+                </div>
 
-                <DeleteButton
+                <!--<DeleteButton
                     class="mt-6"
                     mode="cover"
                     :resource-id="resourceId"
                     :resource-name="resourceName"
                     :field-name="field.attribute"
                     :field="field"
-                />
+                />-->
             </template>
 
             <span v-else>&mdash;</span>
@@ -66,12 +76,12 @@
 
 <script>
 import FilePreview from '../components/FilePreview.vue'
-import DeleteButton from '../components/DeleteButton.vue'
+//import DeleteButton from '../components/DeleteButton.vue'
 
 
 export default {
     components: {
-        DeleteButton,
+        //DeleteButton,
         FilePreview
     },
     props: ['resource', 'resourceName', 'resourceId', 'field', 'index'],
@@ -88,7 +98,7 @@ export default {
         },
 
         shouldShowToolbar() {
-            return Boolean(this.field.downloadable && this.field.thumbnailUrl)
+            return Boolean(this.field.downloadable && this.field.displayedAs.original)
         },
 
         coverField() {
@@ -99,8 +109,9 @@ export default {
         }
     },
     methods: {
-        download() {
-            const {resourceName, resourceId, style} = this
+        download(s = null) {
+            const {resourceName, resourceId} = this
+            const style = s ?? this.style
             const attribute = this.field.attribute
 
             let link = document.createElement('a')

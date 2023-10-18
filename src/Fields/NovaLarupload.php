@@ -105,6 +105,10 @@ class NovaLarupload extends File
                 $model->attachment($attachment)->attach($file, $cover);
             }
             else if ($request->isUpdateOrUpdateAttachedRequest() and $cover) {
+                if (!$model->attachment($attachment)->url()) {
+                    abort(400);
+                }
+
                 $model->attachment($attachment)->cover()->update($cover);
             }
 
