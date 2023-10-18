@@ -2,7 +2,6 @@
     <div class="video" :dir="dir" :class="{small: !isDetails}">
         <media-player
             @click.stop.prevent
-            ref="player"
             class="media-player"
             :title="title"
             :src="src"
@@ -16,7 +15,6 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, ref} from 'vue'
 import 'vidstack/player'
 import 'vidstack/player/layouts'
 import 'vidstack/player/ui'
@@ -47,14 +45,6 @@ const props = defineProps({
         type: Boolean,
         required: true
     }
-})
-
-const player = ref(null)
-
-
-// hooks
-onBeforeUnmount(() => {
-    player.value?.pause()
 })
 </script>
 

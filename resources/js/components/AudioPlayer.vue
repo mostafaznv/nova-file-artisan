@@ -1,16 +1,13 @@
 <template>
     <div class="audio" :dir="dir" :class="{small: !isDetails}">
-        <media-player @click.stop.prevent ref="player" :title="meta.name" :src="src" crossorigin>
-            <media-provider></media-provider>
-            <media-audio-layout></media-audio-layout>
+        <media-player @click.stop.prevent :title="meta.name" :src="src" crossorigin>
+            <media-provider />
+            <media-audio-layout />
         </media-player>
     </div>
 </template>
 
 <script setup>
-import {ref, onBeforeUnmount} from 'vue'
-
-
 const props = defineProps({
     src: {
         type: String,
@@ -31,12 +28,6 @@ const props = defineProps({
         type: Boolean,
         required: true
     }
-})
-
-const player = ref(null)
-
-onBeforeUnmount(() => {
-    player.value?.pause()
 })
 </script>
 
