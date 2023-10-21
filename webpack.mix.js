@@ -21,7 +21,7 @@ mix.setPublicPath('dist')
             }),
         ]
     })
-    .nova('mostafaznv/nova-larupload')
+    .nova('mostafaznv/nova-file-artisan')
 
 if (mix.inProduction()) {
     mix.version()
