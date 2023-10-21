@@ -1,6 +1,6 @@
 <?php
 
-namespace Mostafaznv\NovaLarupload\Traits;
+namespace Mostafaznv\NovaFileArtisan\Traits;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -11,7 +11,7 @@ trait HandlesValidation
      * Validation rules for the cover files
      *
      * @param array $rules
-     * @return \Mostafaznv\NovaLarupload\Fields\NovaLarupload|HandlesValidation
+     * @return \Mostafaznv\NovaFileArtisan\Fields\NovaFileArtisan|HandlesValidation
      */
     public function coverRules(array $rules): self
     {
@@ -100,7 +100,7 @@ trait HandlesValidation
     }
 
     /**
-     * Custom validation for nova-larupload fields
+     * Custom validation for nova-file-artisan fields
      *
      * @param NovaRequest $request
      * @param string $attribute

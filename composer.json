@@ -1,5 +1,5 @@
 {
-    "name": "mostafaznv/nova-larupload",
+    "name": "mostafaznv/nova-file-artisan",
     "description": "Larupload Tool for Laravel Nova",
     "keywords": [
         "file",
@@ -32,13 +32,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Mostafaznv\\NovaLarupload\\": "src/"
+            "Mostafaznv\\NovaFileArtisan\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Mostafaznv\\NovaLarupload\\NovaLaruploadServiceProvider"
+                "Mostafaznv\\NovaFileArtisan\\NovaFileArtisanServiceProvider"
             ]
         }
     },

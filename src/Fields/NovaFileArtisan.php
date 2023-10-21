@@ -1,20 +1,20 @@
 <?php
 
-namespace Mostafaznv\NovaLarupload\Fields;
+namespace Mostafaznv\NovaFileArtisan\Fields;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\SupportsDependentFields;
 use Mostafaznv\Larupload\Enums\LaruploadFileType;
 use Mostafaznv\Larupload\Storage\Attachment;
-use Mostafaznv\NovaLarupload\Traits\HandlesValidation;
+use Mostafaznv\NovaFileArtisan\Traits\HandlesValidation;
 
 
-class NovaLarupload extends File
+class NovaFileArtisan extends File
 {
     use SupportsDependentFields, HandlesValidation;
 
-    public $component   = 'nova-larupload';
+    public $component   = 'nova-file-artisan';
     public $textAlign   = 'center';
     public $showOnIndex = true;
     public $prunable    = true;
@@ -176,7 +176,7 @@ class NovaLarupload extends File
         return [
             ...parent::jsonSerialize(),
 
-            'playerDirection' => config('nova-larupload.ui.player.dir'),
+            'playerDirection' => config('nova-file-artisan.ui.player.dir'),
 
             'displayCoverUploader' => $this->displayCoverUploader !== null
                 ? $this->displayCoverUploader

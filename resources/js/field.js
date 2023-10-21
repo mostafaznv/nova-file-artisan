@@ -3,7 +3,7 @@ import DetailField from './fields/DetailField'
 import FormField from './fields/FormField'
 
 Nova.booting((Vue) => {
-    Vue.component('index-nova-larupload', IndexField);
-    Vue.component('detail-nova-larupload', DetailField);
-    Vue.component('form-nova-larupload', FormField);
+    Vue.component('index-nova-file-artisan', IndexField);
+    Vue.component('detail-nova-file-artisan', DetailField);
+    Vue.component('form-nova-file-artisan', FormField);
 })

@@ -1,12 +1,12 @@
 <?php
 
-namespace Mostafaznv\NovaLarupload\Fields;
+namespace Mostafaznv\NovaFileArtisan\Fields;
 
 use Laravel\Nova\Fields\Text;
 use Mostafaznv\Larupload\Storage\Proxy\AttachmentProxy;
 
 
-class NovaLaruploadMeta
+class NovaFileArtisanMeta
 {
     protected string $attachment;
 
