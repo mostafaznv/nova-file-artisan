@@ -38,7 +38,6 @@ Therefore, if you decide to use my packages, please kindly consider making a don
 * All [Larupload](https://github.com/mostafaznv/larupload) features are accessible in Nova File Artisan.
 
 
-----
 
 ## Requirements:
 
