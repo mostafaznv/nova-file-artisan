@@ -1,6 +1,6 @@
 # Nova File Artisan
 
-[![GitHub license](https://img.shields.io/github/license/mostafaznv/nova-file-artisan?style=flat-square)](https://github.com/mostafaznv/nova-file-artisan/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/mostafaznv/nova-file-artisan?style=flat-square)](https://github.com/mostafaznv/nova-file-artisan/blob/main/LICENSE.txt)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/mostafaznv/nova-file-artisan?style=flat-square&logo=packagist)](https://packagist.org/packages/mostafaznv/nova-file-artisan)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/mostafaznv/nova-file-artisan.svg?style=flat-square&logo=composer)](https://packagist.org/packages/mostafaznv/nova-file-artisan)
 
