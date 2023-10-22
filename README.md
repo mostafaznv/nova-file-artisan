@@ -245,7 +245,7 @@ Therefore, if you decide to use my packages, please kindly consider making a don
 
 ## Demo:
 
-https://github.com/mostafaznv/nova-file-artisan/assets/7619687/d1be3b23-0bd5-4e1f-bc18-0cf853750213
+https://github.com/mostafaznv/nova-file-artisan/assets/7619687/20af12ab-0ba1-4767-9b0c-e4a49a0b8e5b
 
 ## License
 
