@@ -27,7 +27,7 @@
         "ext-json": "*",
         "laravel/framework": "^10.4.1",
         "laravel/nova": "^4.27",
-        "mostafaznv/larupload": "^1.0.4",
+        "mostafaznv/larupload": "^1.0.5",
         "nova-kit/nova-packages-tool": "^v1.13.3"
     },
     "autoload": {
