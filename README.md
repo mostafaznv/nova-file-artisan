@@ -1,6 +1,6 @@
 # Nova File Artisan
 
-[![GitHub license](https://img.shields.io/github/license/mostafaznv/nova-file-artisan?style=flat-square)](https://github.com/mostafaznv/nova-file-artisan/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/mostafaznv/nova-file-artisan?style=flat-square)](https://github.com/mostafaznv/nova-file-artisan/blob/main/LICENSE.txt)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/mostafaznv/nova-file-artisan?style=flat-square&logo=packagist)](https://packagist.org/packages/mostafaznv/nova-file-artisan)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/mostafaznv/nova-file-artisan.svg?style=flat-square&logo=composer)](https://packagist.org/packages/mostafaznv/nova-file-artisan)
 
@@ -9,7 +9,9 @@ Nova File Artisan is a package that integrates [Larupload](https://github.com/mo
 
 With `Nova File Artisan`, you can use the features of both packages to create a admin panel for your Laravel project. You can upload and display various types of files (such as images, videos, audio, etc.) in your Nova resources. You can also transform your files (such as `resizing`, `cropping`, `compressing`, etc.) using Larupload's methods. You can also set your upload settings (such as disk, path, visibility, etc.) using Larupload's options.
 
-Nova File Artisan is simple to install and use, and it supports multiple file systems (such as local, s3, sftp, etc.).
+Nova File Artisan is simple to install and use, and it supports multiple file systems (such as local, s3, sftp, etc.). 
+
+[Demo](#demo)
 
 ----
 I am on an open-source journey 🚀, and I wish I could solely focus on my development path without worrying about my financial situation. However, as life is not perfect, I have to consider other factors.
@@ -18,7 +20,7 @@ Therefore, if you decide to use my packages, please kindly consider making a don
 
 [![Donate](https://mostafaznv.github.io/donate/donate.svg)](https://mostafaznv.github.io/donate)
 
-
+----
 
 ### Some features for Nova Artisan Field:
 
@@ -35,10 +37,11 @@ Therefore, if you decide to use my packages, please kindly consider making a don
 * Extraction of the dominant color from images and videos.
 * Download button for each file style.
 * Compatibility with various storage drivers.
+* Video processing through a queue system.
+* Ready for integration with a REST API.
 * All [Larupload](https://github.com/mostafaznv/larupload) features are accessible in Nova File Artisan.
 
 
-----
 
 ## Requirements:
 
@@ -231,6 +234,9 @@ class Attachment extends Resource
 Nova's `prunable` method does not work with `NovaFileArtisan` field as expected. As you may know, in `Larupload`, there is an option to turn on/off `preserve-files`. This option is used to prevent files from being deleted when the model is deleted from the database, and it aligns with the behavior expected from the `prunable` method. Therefore, if you want to keep files when the model is deleted, you should set `preserve-files` to `true`. You can do this either in your Larupload [configuration](https://mostafaznv.gitbook.io/larupload/advanced-usage/configuration/preserve-files) file or in your file [attachment instance](https://mostafaznv.gitbook.io/larupload/advanced-usage/attachment/preserve-files).
 
 
+## Demo:
+
+https://github.com/mostafaznv/nova-file-artisan/assets/7619687/d1be3b23-0bd5-4e1f-bc18-0cf853750213
 
 ----
 
