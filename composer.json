@@ -1,6 +1,6 @@
 {
     "name": "mostafaznv/nova-file-artisan",
-    "description": "Larupload Tool for Laravel Nova",
+    "description": "File Upload Tool for Laravel Nova",
     "keywords": [
         "file",
         "upload",
