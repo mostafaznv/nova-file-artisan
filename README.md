@@ -227,6 +227,74 @@ class Attachment extends Resource
 }
 ```
 
+## Working with Covers
+Covers are automatically generated for `videos` and `images`, but you also have the option to upload custom covers for these and any other file types.
+
+However, there may be occasions when you need to hide the cover on the details page or even remove the cover uploader from the form. You can achieve this by using the `hideCoverFromDetail` and `hideCoverUploader` methods.
+
+### Hide Cover Uploader
+```php  
+<?php
+
+namespace App\Nova;
+
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Models\Attachment as Model;
+use Mostafaznv\NovaFileArtisan\Fields\NovaFileArtisan;
+
+
+class Attachment extends Resource
+{
+    public static string $model = Model::class;
+
+    public function fields(NovaRequest $request): array
+    {
+        return [
+            ID::make()->sortable(),
+
+            NovaFileArtisan::make('Main File', 'main_file')
+                ->hideCoverUploader(),
+        ];
+    }
+}
+```
+
+### Hide Cover From Detail Page
+```php  
+<?php
+
+namespace App\Nova;
+
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Models\Attachment as Model;
+use Mostafaznv\NovaFileArtisan\Fields\NovaFileArtisan;
+
+
+class Attachment extends Resource
+{
+    public static string $model = Model::class;
+
+    public function fields(NovaRequest $request): array
+    {
+        return [
+            ID::make()->sortable(),
+
+            NovaFileArtisan::make('Main File', 'main_file')
+                ->hideCoverFromDetail(),
+
+            // or you can hide cover from detail based on condition
+            
+            NovaFileArtisan::make('Main File', 'main_file')
+                ->hideCoverFromDetail(
+                    fn (NovaRequest $request) => $request->resourceId == 34
+                ),
+        ];
+    }
+}
+```
+
 
 ## Notes
 
