@@ -5,6 +5,7 @@
         :field="field"
         :dir="dir"
         :is-details="isDetails"
+        :max-height="maxHeight"
         :style="style"
     />
 
@@ -56,6 +57,10 @@ const props = defineProps({
         validator(value) {
             return ['ltr', 'rtl', 'auto'].includes(value)
         }
+    },
+    maxHeight: {
+        type: String,
+        default: 'auto'
     },
     isDetails: {
         type: Boolean,

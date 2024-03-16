@@ -177,6 +177,7 @@ class NovaFileArtisan extends File
             ...parent::jsonSerialize(),
 
             'playerDirection' => config('nova-file-artisan.ui.player.dir'),
+            'playerMaxHeight' => config('nova-file-artisan.ui.player.max-height', '160px'),
 
             'displayCoverUploader' => $this->displayCoverUploader !== null
                 ? $this->displayCoverUploader

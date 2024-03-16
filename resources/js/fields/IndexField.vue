@@ -4,6 +4,7 @@
             v-if="field.previewUrl"
             :field="field.displayedAs"
             :dir="field.playerDirection"
+            :max-height="field.playerMaxHeight"
             :is-details="false"
         />
 

@@ -49,6 +49,7 @@
             :src="field.original"
             :poster="field.cover ?? ''"
             :dir="dir"
+            :max-height="maxHeight"
             :is-details="isDetails"
         />
     </div>
@@ -79,6 +80,10 @@ const props = defineProps({
         validator(value) {
             return ['ltr', 'rtl', 'auto'].includes(value)
         }
+    },
+    maxHeight: {
+        type: String,
+        default: 'auto'
     },
     isDetails: {
         type: Boolean,
