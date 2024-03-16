@@ -37,9 +37,9 @@
         </template>
     </PanelItem>
 
-    <PanelItem :index="index + '-cover'" :field="coverField">
+    <PanelItem v-if="field.showCoverOnDetail" :index="index + '-cover'" :field="coverField">
         <template #value>
-            <template v-if="coverField.displayedAs.cover && coverField.displayCoverUploader">
+            <template v-if="coverField.displayedAs.cover">
                 <ImageLoader
                     aspect="aspect-auto"
                     :src="coverField.displayedAs.cover"

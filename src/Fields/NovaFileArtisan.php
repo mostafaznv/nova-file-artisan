@@ -27,6 +27,10 @@ class NovaFileArtisan extends File
     public $laruploadCreationRules = [];
     public $laruploadUpdateRules   = [];
 
+    /**
+     * @var bool|callable
+     */
+    protected mixed $hideCoverFromDetail  = false;
     protected ?bool $displayCoverUploader = null;
 
 
@@ -39,7 +43,7 @@ class NovaFileArtisan extends File
         );
 
         $this->preview(
-            function($value, $disk, $model) use ($attachment) {
+            function ($value, $disk, $model) use ($attachment) {
                 $this->value = $model->id
                     ? $model->attachment($attachment)->url()
                     : null;
@@ -50,7 +54,7 @@ class NovaFileArtisan extends File
         );
 
         $this->thumbnail(
-            function($value, $disk, $model) use ($attachment) {
+            function ($value, $disk, $model) use ($attachment) {
                 if ($model->id) {
                     return $model->attachment($attachment)->url('cover');
                 }
@@ -59,7 +63,7 @@ class NovaFileArtisan extends File
             }
         );
 
-        $this->downloadResponseCallback = function(NovaRequest $request, $model) use ($attachment) {
+        $this->downloadResponseCallback = function (NovaRequest $request, $model) use ($attachment) {
             $style = $request->query('style') ?? 'original';
 
             if ($style == 'original') {
@@ -87,7 +91,7 @@ class NovaFileArtisan extends File
                 }
             }
 
-            $response =  $model->attachment($attachment)->download($style);
+            $response = $model->attachment($attachment)->download($style);
 
             if (is_null($response)) {
                 abort(404);
@@ -97,7 +101,7 @@ class NovaFileArtisan extends File
         };
 
 
-        $this->storageCallback = function(NovaRequest $request, $model) use ($attachment) {
+        $this->storageCallback = function (NovaRequest $request, $model) use ($attachment) {
             $file = $request->file("$attachment.original");
             $cover = $request->file("$attachment.cover");
 
@@ -115,7 +119,7 @@ class NovaFileArtisan extends File
             return [];
         };
 
-        $this->deleteCallback = function(NovaRequest $request, $model) use ($attachment) {
+        $this->deleteCallback = function (NovaRequest $request, $model) use ($attachment) {
             if ($this->isPrunable()) {
                 if ($request->query('cover') === 'true') {
                     $model->attachment($attachment)->cover()->detach();
@@ -162,6 +166,13 @@ class NovaFileArtisan extends File
         return null;
     }
 
+    public function hideCoverFromDetail(bool|callable $callback = true): self
+    {
+        $this->hideCoverFromDetail = $callback;
+
+        return $this;
+    }
+
     public function hideCoverUploader(): self
     {
         $this->displayCoverUploader = false;
@@ -169,18 +180,33 @@ class NovaFileArtisan extends File
         return $this;
     }
 
+    public function coverIsHiddenFromDetail(NovaRequest $request)
+    {
+        return with($this->hideCoverFromDetail, function ($callback) use ($request) {
+            if ($callback === true || (is_callable($callback) && call_user_func($callback, $request))) {
+                return true;
+            }
+
+            return false;
+        });
+    }
+
     public function jsonSerialize(): array
     {
-        $attachment = $this->attachment($this->resource, $this->attribute);
+        return with(app(NovaRequest::class), function ($request) {
+            $attachment = $this->attachment($this->resource, $this->attribute);
 
-        return [
-            ...parent::jsonSerialize(),
+            return [
+                ...parent::jsonSerialize(),
 
-            'playerDirection' => config('nova-file-artisan.ui.player.dir'),
+                'playerDirection' => config('nova-file-artisan.ui.player.dir'),
+                'playerMaxHeight' => config('nova-file-artisan.ui.player.max-height', '160px'),
 
-            'displayCoverUploader' => $this->displayCoverUploader !== null
-                ? $this->displayCoverUploader
-                : ($attachment?->getGenerateCoverStatus() ?? true)
-        ];
+                'showCoverOnDetail'    => $this->coverIsHiddenFromDetail($request) === false,
+                'displayCoverUploader' => $this->displayCoverUploader !== null
+                    ? $this->displayCoverUploader
+                    : ($attachment?->getGenerateCoverStatus() ?? true)
+            ];
+        });
     }
 }

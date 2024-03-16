@@ -13,7 +13,19 @@ return [
             |
             */
 
-            'dir' => 'ltr'
+            'dir' => 'ltr',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Max Height
+            |--------------------------------------------------------------------------
+            |
+            | The default maximum height for the player on the index page.
+            | Example: auto, 100px, etc.
+            |
+            */
+
+            'max-height' => '160px',
         ]
     ]
 ];

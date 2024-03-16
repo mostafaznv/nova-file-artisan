@@ -41,6 +41,10 @@ const props = defineProps({
             return ['ltr', 'rtl', 'auto'].includes(value)
         }
     },
+    maxHeight: {
+        type: String,
+        default: 'auto'
+    },
     isDetails: {
         type: Boolean,
         required: true
@@ -58,6 +62,10 @@ const props = defineProps({
 
     &.small {
         max-width: 270px;
+    }
+
+    ::v-deep(.media-player) video {
+        max-height: v-bind(maxHeight);
     }
 
     ::v-deep(.vds-poster) {
