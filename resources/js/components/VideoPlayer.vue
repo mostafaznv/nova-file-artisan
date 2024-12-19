@@ -69,6 +69,9 @@ const props = defineProps({
     }
 
     ::v-deep(.vds-poster) {
+        top: 0;
+        transform: none;
+
         img {
             object-fit: cover;
         }
