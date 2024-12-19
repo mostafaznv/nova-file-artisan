@@ -134,7 +134,7 @@ class NovaFileArtisan extends File
     }
 
 
-    protected function fillAttribute(NovaRequest $request, string $requestAttribute, object $model, string $attribute): mixed
+    protected function fillAttribute(NovaRequest $request, $requestAttribute, $model, $attribute): mixed
     {
         $this->validate($request, $attribute);
 

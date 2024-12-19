@@ -14,15 +14,16 @@
 
             <div class="flex items-center text-sm mt-3 gap-6">
                 <p v-if="shouldShowToolbar" class="flex items-center">
-                    <LinkButton
+                    <Button
+                        variant="ghost"
                         @keydown.enter.prevent="download(null)"
                         @click.prevent="download(null)"
                         :disabled="style === 'stream'"
                         tabindex="0"
                     >
-                        <Icon class="mr-2" type="download" width="16" height="16"/>
+                        <Icon name="arrow-down-tray" type="mini" class="mr-2" />
                         <span class="class mt-1">{{ __('Download') }}</span>
-                    </LinkButton>
+                    </Button>
                 </p>
 
                 <!--<DeleteButton
@@ -48,14 +49,15 @@
 
                 <div v-if="field.downloadable" class="flex items-center text-sm mt-3 gap-6">
                     <p class="flex items-center">
-                        <LinkButton
+                        <Button
+                            variant="ghost"
                             @keydown.enter.prevent="download('cover')"
                             @click.prevent="download('cover')"
                             tabindex="1"
                         >
-                            <Icon class="mr-2" type="download" width="16" height="16"/>
+                            <Icon name="arrow-down-tray" type="mini" class="mr-2" />
                             <span class="class mt-1">{{ __('Download') }}</span>
-                        </LinkButton>
+                        </Button>
                     </p>
                 </div>
 
@@ -76,11 +78,14 @@
 
 <script>
 import FilePreview from '../components/FilePreview.vue'
+import {Button, Icon} from 'laravel-nova-ui'
 //import DeleteButton from '../components/DeleteButton.vue'
 
 
 export default {
     components: {
+        Button,
+        Icon,
         //DeleteButton,
         FilePreview
     },

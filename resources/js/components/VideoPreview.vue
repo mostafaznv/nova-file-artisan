@@ -33,7 +33,7 @@
                         />
 
                         <div v-else class="flex justify-center items-center help-text p-8">
-                            <Icon type="video-camera" class="mr-1"/>
+                            <Icon name="video-camera" class="mr-1"/>
                             <span>{{ __('Video Not Found') }}</span>
                         </div>
                     </template>
@@ -57,6 +57,7 @@
 
 <script setup>
 import {ref, computed} from 'vue'
+import {Icon} from 'laravel-nova-ui'
 import VideoPlayer from './VideoPlayer.vue'
 import 'vidstack/player'
 import 'vidstack/player/layouts'
