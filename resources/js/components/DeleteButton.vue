@@ -5,10 +5,8 @@
     >
         <Icon
             class="mr-2"
-            type="trash"
-            view-box="0 0 24 24"
-            width="16"
-            height="16"
+            name="trash"
+            type="mini"
         />
 
         <span class="class mt-1">
@@ -38,15 +36,16 @@
 
             <ModalFooter>
                 <div class="ml-auto">
-                    <LinkButton
+                    <Button
                         type="button"
+                        variant="ghost"
                         data-testid="cancel-button"
                         dusk="cancel-delete-button"
                         @click.prevent="showModal = false"
                         class="mr-3"
                     >
                         {{ __('Cancel') }}
-                    </LinkButton>
+                    </Button>
 
                     <LoadingButton
                         ref="confirmButton"
@@ -67,6 +66,7 @@
 <script setup>
 import {ref, computed} from 'vue'
 import {useLocalization} from 'laravel-nova'
+import {Button, Icon} from 'laravel-nova-ui'
 
 
 const props = defineProps({
